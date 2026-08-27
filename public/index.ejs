@@ -1,0 +1,33 @@
+<%- include('partials-head') %>
+
+<main class="container">
+  <h1>Shared Notes & Resources</h1>
+  <p class="subtitle">Browse and download notes shared by your classmates.</p>
+
+  <form class="search-bar" method="GET" action="/">
+    <input type="text" name="search" placeholder="Search by title or subject..." value="<%= search %>">
+    <button type="submit">Search</button>
+  </form>
+
+  <% if (notes.length === 0) { %>
+    <p class="empty">No notes found. Be the first to <a href="/upload">upload one</a>!</p>
+  <% } else { %>
+    <div class="grid">
+      <% notes.forEach(note => { %>
+        <div class="card">
+          <h3><%= note.title %></h3>
+          <span class="tag"><%= note.subject %></span>
+          <p class="meta">Uploaded by <%= note.uploader %> · <%= new Date(note.uploadedAt).toLocaleDateString() %></p>
+          <div class="card-actions">
+            <a class="btn-download" href="/uploads/<%= note.filename %>" download="<%= note.originalName %>">⬇ Download</a>
+            <form method="POST" action="/delete/<%= note.id %>" onsubmit="return confirm('Delete this note?');">
+              <button type="submit" class="btn-delete">Delete</button>
+            </form>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } %>
+</main>
+</body>
+</html>
